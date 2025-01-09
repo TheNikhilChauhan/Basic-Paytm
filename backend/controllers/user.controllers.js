@@ -1,6 +1,7 @@
 import User from "../models/user.models.js";
 import zod from "zod";
 import jwt from "jsonwebtoken";
+import Account from "../models/account.models.js";
 
 const signupBody = zod.object({
   username: zod.string().email(),
@@ -30,15 +31,21 @@ const registerUser = async (req, res) => {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
     });
-    const userID = newUser._id;
-    const createdUser = await User.findById(userID).select("-password");
+    const userId = newUser._id;
+
+    await Account.create({
+      userId,
+      balance: 1 + Math.random() * 10000,
+    });
+
+    const createdUser = await User.findById(userId).select("-password");
     if (!createdUser) {
       throw new Error("Failed to create a user");
     }
 
     const token = jwt.sign(
       {
-        userID,
+        userId,
       },
       process.env.JWT_SECRET
     );
@@ -55,7 +62,7 @@ const registerUser = async (req, res) => {
 
 const signinBody = zod.object({
   username: zod.string().email(),
-  password: string(),
+  password: zod.string(),
 });
 
 const signinUser = async (req, res) => {
@@ -74,7 +81,7 @@ const signinUser = async (req, res) => {
   if (user) {
     const token = jwt.sign(
       {
-        userID: user._id,
+        userId: user._id,
       },
       process.env.JWT_SECRET
     );
@@ -107,7 +114,7 @@ const updateUser = async (req, res) => {
   }
 
   await User.updateOne(req.body, {
-    id: req.userID,
+    id: req.userId,
   });
 
   res.json({
