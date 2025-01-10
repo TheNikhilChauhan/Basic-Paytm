@@ -5,9 +5,12 @@ export const BottomWarning = ({ label, to, buttonText }) => {
   return (
     <div className="py-2 text-sm flex justify-center text-white">
       <div>{label}</div>
-      {/* <Link className="pointer underline pl-1 cursor-pointer" to={to}>
+      <Link
+        className="pointer underline pl-1 cursor-pointer text-white"
+        to={to}
+      >
         {buttonText}
-      </Link> */}
+      </Link>
     </div>
   );
 };

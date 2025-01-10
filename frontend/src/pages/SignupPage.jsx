@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { Heading } from "../components/Heading";
 import { Input } from "../components/Input";
 import { SubHeading } from "../components/SubHeading";
@@ -18,31 +19,46 @@ export const SignupPage = () => {
           <Heading label={"Sign Up"} />
           <SubHeading label={"Enter your information to create an account"} />
           <Input
-            label={firstname}
-            onChange={(e) => e.target.value}
+            label={"Firstname"}
+            onChange={(e) => setFirstname(e.target.value)}
             placeholder={"Firstname"}
           />
           <Input
-            label={lastname}
-            onChange={(e) => e.target.value}
+            label={"Lastname"}
+            onChange={(e) => setLastname(e.target.value)}
             placeholder={"Lastname"}
           />
           <Input
-            label={email}
-            onChange={(e) => e.target.value}
+            label={"Email"}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder={"Email"}
           />
           <Input
-            label={password}
-            onChange={(e) => e.target.value}
+            label={"Password"}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder={"Password"}
           />
           <div>
-            <Button label={"Register"} />
+            <Button
+              label={"Register"}
+              onClick={async () => {
+                const response = await axios.post(
+                  "http://localhost:5000/api/v1/user/signup",
+                  {
+                    firstname,
+                    lastname,
+                    email,
+                    password,
+                  }
+                );
+                console.log(response);
+              }}
+            />
           </div>
           <BottomWarning
             label={"Already have an account?"}
             buttonText={"Sign In"}
+            to={"/signin"}
           />
         </div>
       </div>

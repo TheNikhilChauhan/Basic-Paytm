@@ -4,8 +4,9 @@ import { SubHeading } from "../components/SubHeading";
 import { Button } from "../components/Button";
 import { BottomWarning } from "../components/BottomWarning";
 import { useState } from "react";
+import axios from "axios";
 
-export const SinginPage = () => {
+export const SigninPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -16,21 +17,34 @@ export const SinginPage = () => {
           <SubHeading label={"Enter your credentials to access your account"} />
 
           <Input
-            label={email}
-            onChange={(e) => e.target.value}
+            label={"Email"}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder={"Email"}
           />
           <Input
-            label={password}
-            onChange={(e) => e.target.value}
+            label={"Password"}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder={"Password"}
           />
           <div>
-            <Button label={"Login"} />
+            <Button
+              label={"Login"}
+              onClick={async () => {
+                const response = await axios.post(
+                  "http://localhost:5000/api/v1/user/signin",
+                  {
+                    email,
+                    password,
+                  }
+                );
+                console.log(response);
+              }}
+            />
           </div>
           <BottomWarning
             label={"Don't have an account?"}
             buttonText={"Sign Up"}
+            to={"/signup"}
           />
         </div>
       </div>
