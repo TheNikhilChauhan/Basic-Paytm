@@ -51,7 +51,7 @@ export const SignupPage = () => {
                     password,
                   }
                 );
-                console.log(response);
+                localStorage.setItem("token", response.data.token);
               }}
             />
           </div>

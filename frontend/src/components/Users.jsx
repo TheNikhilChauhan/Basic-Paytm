@@ -12,7 +12,7 @@ export const Users = () => {
     axios
       .get("http://localhost:5000/api/v1/user/bulk?filter=" + filter)
       .then((response) => {
-        setUsers(response.data.user);
+        setUsers(response.data.users);
       });
   }, [filter]);
 
@@ -30,8 +30,8 @@ export const Users = () => {
         ></input>
       </div>
       <div>
-        {users.map((user, index) => (
-          <User user={user} key={index} />
+        {users.map((user) => (
+          <User key={user._id} user={user} />
         ))}
       </div>
     </>

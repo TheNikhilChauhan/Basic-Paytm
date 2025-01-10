@@ -123,31 +123,44 @@ const updateUser = async (req, res) => {
 };
 
 const searchUsers = async (req, res) => {
-  const filter = req.body.filter || "";
+  const filter = req.query.filter?.trim() || "";
 
-  const users = await User.find({
-    $or: [
-      {
-        firstname: {
-          $regex: filter,
+  try {
+    const users = await User.find({
+      $or: [
+        {
+          firstname: {
+            $regex: filter,
+          },
         },
-      },
-      {
-        lastname: {
-          $regex: filter,
+        {
+          lastname: {
+            $regex: filter,
+          },
         },
-      },
-    ],
-  });
+      ],
+    });
 
-  res.json({
-    user: users.map((user) => ({
-      _id: user._id,
-      username: user.username,
-      firstname: user.firstname,
-      lastname: user.lastname,
-    })),
-  });
+    if (users.length === 0) {
+      return res.status(404).json({
+        msg: "No users found",
+      });
+    }
+
+    res.json({
+      users: users.map((user) => ({
+        _id: user._id,
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+      })),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: "An error occurred while searching for users",
+    });
+  }
 };
 
 export { registerUser, signinUser, updateUser, searchUsers };
