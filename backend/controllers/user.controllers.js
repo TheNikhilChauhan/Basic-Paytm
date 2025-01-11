@@ -66,16 +66,20 @@ const signinBody = zod.object({
 });
 
 const signinUser = async (req, res) => {
-  const { success } = signinBody.safeParse(req.body);
-  if (!success) {
-    return res.status(411).json({
-      message: "Email already taken / Incorrect inputs",
+  const validationResult = signinBody.safeParse(req.body);
+
+  if (!validationResult.success) {
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: validationResult.error.format(), // Provide detailed error messages
     });
   }
 
+  const { username, password } = validationResult.data;
+
   const user = await User.findOne({
-    username: req.body.username,
-    password: req.body.password,
+    username,
+    password,
   });
 
   if (user) {
@@ -131,11 +135,13 @@ const searchUsers = async (req, res) => {
         {
           firstname: {
             $regex: filter,
+            $options: "i",
           },
         },
         {
           lastname: {
             $regex: filter,
+            $options: "i",
           },
         },
       ],

@@ -9,11 +9,17 @@ export const Users = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/user/bulk?filter=" + filter)
-      .then((response) => {
-        setUsers(response.data.users);
-      });
+    const fetch = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/v1/user/bulk?filter=" + filter
+        );
+        setUsers(res.data.users);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetch();
   }, [filter]);
 
   return (

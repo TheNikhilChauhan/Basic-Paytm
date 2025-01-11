@@ -47,7 +47,7 @@ export const SignupPage = () => {
                   {
                     firstname,
                     lastname,
-                    email,
+                    username: email,
                     password,
                   }
                 );

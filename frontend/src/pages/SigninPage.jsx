@@ -5,10 +5,12 @@ import { Button } from "../components/Button";
 import { BottomWarning } from "../components/BottomWarning";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const SigninPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   return (
     <div className=" bg-gradient-to-r from-gray-800 to-gray-600 h-screen flex justify-center ">
       <div className="flex flex-col justify-center ">
@@ -33,11 +35,16 @@ export const SigninPage = () => {
                 const response = await axios.post(
                   "http://localhost:5000/api/v1/user/signin",
                   {
-                    email,
-                    password,
+                    username: email,
+                    password: password,
                   }
                 );
-                console.log(response);
+
+                localStorage.setItem(
+                  "token",
+                  JSON.stringify(response.data.token)
+                );
+                navigate("/dashboard");
               }}
             />
           </div>
